@@ -14,5 +14,5 @@ class AppTheme {
           error: Color(0xFFEA7979),
           tertiary: Color(0xFFB5C4C7)),
       iconButtonTheme: IconButtonThemeData(
-          style: IconButton.styleFrom(foregroundColor: Color(0xFF42B4CA))));
+          style: IconButton.styleFrom(foregroundColor: const Color(0xFF42B4CA))));
 }

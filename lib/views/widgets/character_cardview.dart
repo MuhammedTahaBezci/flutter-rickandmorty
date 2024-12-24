@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
 
-class CharacterCardview extends StatelessWidget {
-  final String image;
-  final String name;
-  final String orign;
-  final String status;
-  final String type;
+import '../../models/characters_model.dart';
 
-  const CharacterCardview(
-      {super.key,
-      required this.image,
-      required this.name,
-      required this.orign,
-      required this.status,
-      required this.type});
+// class CharacterCardview extends StatelessWidget {
+//   final String image;
+//   final String name;
+//   final String orign;
+//   final String status;
+//   final String type;
+
+//   const CharacterCardview(
+//       {super.key,
+//       required this.image,
+//       required this.name,
+//       required this.orign,
+//       required this.status,
+//       required this.type});
+
+class CharacterCardview extends StatelessWidget {
+  final CharacterModel characterModel;
+  const CharacterCardview({
+    super.key,
+    required this.characterModel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +41,7 @@ class CharacterCardview extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(6),
                   child: Image.network(
-                    image,
+                    characterModel.image,
                     height: 100,
                   ),
                 ),
@@ -43,21 +52,25 @@ class CharacterCardview extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        name,
+                        characterModel.name,
                         style: const TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(height: 5),
-                      _infoWidget(type: 'Köken', value: orign),
+                      _infoWidget(
+                          type: 'Köken', value: characterModel.origin.name),
                       const SizedBox(height: 4),
-                      _infoWidget(type: 'Durum', value: '$status - $type'),
+                      _infoWidget(
+                          type: 'Durum',
+                          value:
+                              '${characterModel.status} - ${characterModel.species}'),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          IconButton(onPressed: () {}, icon: Icon(Icons.bookmark_border))
+          IconButton(onPressed: () {}, icon: const Icon(Icons.bookmark_border))
         ],
       ),
     );
