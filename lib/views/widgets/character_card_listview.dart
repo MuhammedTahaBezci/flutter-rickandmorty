@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:rickandmorty/models/characters_model.dart';
 import 'package:rickandmorty/views/widgets/character_cardview.dart';
@@ -7,8 +5,14 @@ import 'package:rickandmorty/views/widgets/character_cardview.dart';
 class CharacterCardListview extends StatefulWidget {
   final List<CharacterModel> characters;
   final VoidCallback onLoadMore;
-  const CharacterCardListview(
-      {super.key, required this.characters, required this.onLoadMore});
+  final bool loadMore;
+  
+  const CharacterCardListview({
+    super.key,
+    required this.characters,
+    required this.onLoadMore,
+    this.loadMore = false,
+  });
 
   @override
   State<CharacterCardListview> createState() => _CharacterCardListviewState();
@@ -43,7 +47,13 @@ class _CharacterCardListviewState extends State<CharacterCardListview> {
         controller: _scrollController,
         itemBuilder: (context, index) {
           final characterModel = widget.characters[index];
-          return CharacterCardview(characterModel: characterModel);
+          return Column(
+            children: [
+              CharacterCardview(characterModel: characterModel),
+              if (widget.loadMore && index == widget.characters.length - 1)
+                const CircularProgressIndicator.adaptive()
+            ],
+          );
         },
       ),
     );

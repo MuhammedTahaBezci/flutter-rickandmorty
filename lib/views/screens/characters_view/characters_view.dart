@@ -21,6 +21,7 @@ class _CharactersViewState extends State<CharactersView> {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<CharactersViewmodel>();
     return Scaffold(
       body: Center(
         child: Padding(
@@ -28,18 +29,14 @@ class _CharactersViewState extends State<CharactersView> {
           child: Column(
             children: [
               const SizedBox(height: 12),
-              _searchInputWidget(context),
-              Consumer<CharactersViewmodel>(
-                  builder: (context, viewModel, child) {
-                if (viewModel.charactersModel == null) {
-                  return const CircularProgressIndicator.adaptive();
-                } else {
-                  return CharacterCardListview(
-                    characters: viewModel.charactersModel!.characters,
-                    onLoadMore: ()=> viewModel.getCharacters(),
-                  );
-                }
-              })
+              _searchInputWidget(context, viewModel: viewModel),
+              viewModel.charactersModel == null
+                  ? const CircularProgressIndicator.adaptive()
+                  : CharacterCardListview(
+                      characters: viewModel.charactersModel!.characters,
+                      onLoadMore: () => viewModel.getCharactersMore,
+                      loadMore: viewModel.loadMore,
+                    )
             ],
           ),
         ),
@@ -47,10 +44,13 @@ class _CharactersViewState extends State<CharactersView> {
     );
   }
 
-  Widget _searchInputWidget(BuildContext context) {
+  Widget _searchInputWidget(BuildContext context,
+      {required CharactersViewmodel viewModel}) {
     return Padding(
       padding: const EdgeInsets.only(top: 12, bottom: 16),
-      child: TextField(
+      child: TextFormField(
+        textInputAction: TextInputAction.search,
+        onFieldSubmitted: viewModel.getCharactersByName,
         decoration: InputDecoration(
           labelText: 'Karakter Ara',
           labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface),

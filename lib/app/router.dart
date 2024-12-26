@@ -12,6 +12,7 @@ final _routerKey = GlobalKey<NavigatorState>();
 
 class AppRoutes {
   AppRoutes._();
+
   static const String characters = '/';
   static const String favourites = '/favourites';
   static const String locations = '/locations';
@@ -32,7 +33,7 @@ final router = GoRouter(
                 path: AppRoutes.characters,
                 builder: (context, state) => ChangeNotifierProvider(
                   create: (context) => CharactersViewmodel(),
-                  child: const CharactersView( ),
+                  child: const CharactersView(),
                 ),
               ),
             ],
