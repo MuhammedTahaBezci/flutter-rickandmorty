@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:rickandmorty/app/locator.dart';
 import 'package:rickandmorty/models/characters_model.dart';
+import 'package:rickandmorty/services/prefences_service.dart';
 import 'package:rickandmorty/views/widgets/character_cardview.dart';
 
 class CharacterCardListview extends StatefulWidget {
   final List<CharacterModel> characters;
   final VoidCallback onLoadMore;
   final bool loadMore;
-  
+
   const CharacterCardListview({
     super.key,
     required this.characters,
@@ -20,11 +22,25 @@ class CharacterCardListview extends StatefulWidget {
 
 class _CharacterCardListviewState extends State<CharacterCardListview> {
   final _scrollController = ScrollController();
+  bool _isLoading = true;
+  List<int> _favoritedList = [];
 
   @override
   void initState() {
+    _getFavorites();
     _detectScrollBottom();
     super.initState();
+  }
+
+  void _setLoading(bool value) {
+    _isLoading = value;
+    setState(() {});
+  }
+
+  void _getFavorites() async {
+    _favoritedList = locator<PrefencesService>().getSavedCharacter();
+    _setLoading(false);
+    setState(() {});
   }
 
   void _detectScrollBottom() {
@@ -41,21 +57,27 @@ class _CharacterCardListviewState extends State<CharacterCardListview> {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: ListView.builder(
-        itemCount: widget.characters.length,
-        controller: _scrollController,
-        itemBuilder: (context, index) {
-          final characterModel = widget.characters[index];
-          return Column(
-            children: [
-              CharacterCardview(characterModel: characterModel),
-              if (widget.loadMore && index == widget.characters.length - 1)
-                const CircularProgressIndicator.adaptive()
-            ],
-          );
-        },
-      ),
-    );
+    if (_isLoading) {
+      return const CircularProgressIndicator.adaptive();
+    } else {
+      return Flexible(
+        child: ListView.builder(
+          itemCount: widget.characters.length,
+          controller: _scrollController,
+          itemBuilder: (context, index) {
+            final characterModel = widget.characters[index];
+            final bool isFavorited = _favoritedList.contains(characterModel.id);
+            return Column(
+              children: [
+                CharacterCardview(
+                    characterModel: characterModel, isFavorited: isFavorited),
+                if (widget.loadMore && index == widget.characters.length - 1)
+                  const CircularProgressIndicator.adaptive()
+              ],
+            );
+          },
+        ),
+      );
+    }
   }
 }

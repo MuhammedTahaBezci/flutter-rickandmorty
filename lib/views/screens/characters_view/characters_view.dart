@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import 'package:rickandmorty/views/screens/characters_view/characters_viewmodel.dart';
 import 'package:rickandmorty/views/widgets/character_card_listview.dart';
-import 'package:rickandmorty/views/widgets/character_cardview.dart';
 
 class CharactersView extends StatefulWidget {
   const CharactersView({super.key});
